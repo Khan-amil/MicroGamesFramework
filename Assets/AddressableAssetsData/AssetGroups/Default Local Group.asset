@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 626f23fe182e8c94cbdb8425bac2b9a4
+  m_SerializeEntries:
+  - m_GUID: 83943ffb1c039724dbbdfa2ce04a1905
+    m_Address: Assets/Scripts/PressZGame.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 971cd823c2bfcaa4ba8a587f2b3e53a7
+    m_Address: Assets/Scenes/PressZ.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b55848a4daa5ace4b9e65aed53bb5c26
+    m_Address: Assets/Scenes/AutoLoose.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c54417c12a1fbd24cb43d00d5d54fe66
+    m_Address: Assets/Scenes/AutoWin.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 197a65ea893585147aef6bc657bbb427, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 0680e796df391e343a25f3db58674fec, type: 2}
+    - {fileID: 11400000, guid: ad878abb4e540eb42986e8e74c2ee786, type: 2}

@@ -1,0 +1,33 @@
+{
+    "name": "BaseControls",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "f01bdff7-4353-468a-ab81-266667e42934",
+            "actions": [
+                {
+                    "name": "MainAction",
+                    "type": "Button",
+                    "id": "59ef9d8d-69d4-4bd4-a736-9647c7fa7d9b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "340de7f1-9354-4b63-85d9-29e79b5905ed",
+                    "path": "<Keyboard>/#(A)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MainAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
