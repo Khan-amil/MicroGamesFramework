@@ -1,0 +1,14 @@
+{
+  "name": "com.khanamil.microgamesframework",
+  "version": "0.1.0",
+  "displayName": "Microgames framework",
+  "description": "Framework to ",
+  "keywords": [],
+  "author": {
+    "name": "Khan amil",
+    "email": "khan.amil.y@gmail.com",
+    "url": "https://github.com/Khan-amil"
+  },
+  "type": "library",
+  "hideInEditor": false
+}
