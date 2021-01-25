@@ -1,3 +1,8 @@
 Library/
 obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache
 .idea/
+*.csproj
+*.sln
+obj/
+Logs/
+Build/

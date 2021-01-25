@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
     path: Assets/Scenes/AutoLoose.unity
     guid: b55848a4daa5ace4b9e65aed53bb5c26
   - enabled: 1
@@ -14,4 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PressZ.unity
     guid: 971cd823c2bfcaa4ba8a587f2b3e53a7
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: e5731c5682c968843b9780076ec45c78,
+      type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: 68b1b22180ace0043b48818e73749606,
+      type: 2}

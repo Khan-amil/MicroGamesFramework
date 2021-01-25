@@ -15,4 +15,6 @@ MonoBehaviour:
   _name: 
   _description: loose!
   _sceneName: AutoLoose
+  _scene:
+    m_AssetGUID: b55848a4daa5ace4b9e65aed53bb5c26
   _onTimerEnd: 1

@@ -15,4 +15,6 @@ MonoBehaviour:
   _name: 
   _description: press z
   _sceneName: PressZ
+  _scene:
+    m_AssetGUID: 971cd823c2bfcaa4ba8a587f2b3e53a7
   _onTimerEnd: 2
