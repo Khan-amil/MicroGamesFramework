@@ -59,8 +59,9 @@ public abstract class MicroGameHandler : ScriptableObject
     public async void PrewarmGame()
     {
         Debug.Log("Prewarm start");
-        _sceneInstance = await PrewarmGame2();
-        await Task.Delay(100);
+        // _sceneInstance = await PrewarmGame2();
+        _sceneInstance = await _scene.PreLoadSceneAsync().Task;
+        await Task.Delay(500);
         Debug.Log("Prewarm over");
         _status = GameStatus.Idle;
     }
@@ -72,6 +73,9 @@ public abstract class MicroGameHandler : ScriptableObject
     //     {
     //         yield return null;
     //     }
+    //
+    //     _sceneInstance = _loadScene.Result;
+    //      _status = GameStatus.Idle;
     // }
 
     public async Task<SceneInstance> PrewarmGame2()

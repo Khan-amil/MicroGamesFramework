@@ -54,16 +54,16 @@
   <ItemGroup>
      <Compile Include="Assets\Samples\Input System\1.0.0\Simple Demo\SimpleController_UsingActions.cs" />
      <Compile Include="Assets\Scripts\AutoWinGame.cs" />
+     <Compile Include="Assets\Scripts\MicroGameHandler.cs" />
+     <Compile Include="Assets\Scripts\GameFeedbackUi.cs" />
      <Compile Include="Assets\Samples\Input System\1.0.0\Simple Demo\SimpleControls.cs" />
      <Compile Include="Assets\Scripts\PressZGame.cs" />
      <Compile Include="Assets\Scripts\AutoLooseGame.cs" />
+     <Compile Include="Assets\Scripts\MicroGameIntro.cs" />
      <Compile Include="Assets\Samples\Input System\1.0.0\Simple Demo\SimpleController_UsingActionAsset.cs" />
+     <Compile Include="Assets\Scripts\GameFramework.cs" />
      <Compile Include="Assets\Samples\Input System\1.0.0\Simple Demo\SimpleController_UsingPlayerInput.cs" />
      <Compile Include="Assets\Samples\Input System\1.0.0\Simple Demo\SimpleController_UsingState.cs" />
-     <Compile Include="Assets\Scripts\GameFramework.cs" />
-     <Compile Include="Assets\Scripts\GameFeedbackUi.cs" />
-     <Compile Include="Assets\Scripts\MicroGameHandler.cs" />
-     <Compile Include="Assets\Scripts\MicroGameIntro.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>

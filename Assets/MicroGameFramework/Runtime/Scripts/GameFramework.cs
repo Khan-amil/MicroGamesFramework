@@ -75,11 +75,13 @@ public class GameFramework : MonoBehaviour
             return;
         }
 
-
-        if (_input.Gameplay.MainAction.triggered)
+        if (_currentGame == null)
         {
-            _currentGame = _currentGames[_currentGameIndex++];
-            StartGame();
+            if (_input.Gameplay.MainAction.triggered)
+            {
+                _currentGame = _currentGames[0];
+                StartGame();
+            }
         }
     }
 

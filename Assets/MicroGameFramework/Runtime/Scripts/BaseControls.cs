@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/MicroGameFramework/Runtime/Scripts/BaseControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Packages/com.khanamil.microgamesframework/Runtime/Scripts/BaseControls.inputactions'
 
 using System;
 using System.Collections;
