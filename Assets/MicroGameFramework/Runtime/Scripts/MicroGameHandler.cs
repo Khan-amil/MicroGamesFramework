@@ -56,27 +56,30 @@ public abstract class MicroGameHandler : ScriptableObject
     private GameStatus _status = GameStatus.Init;
     private AsyncOperationHandle<SceneInstance> _loadScene;
 
-    public async void PrewarmGame()
+    public async void PrewarmGameAsync()
     {
         Debug.Log("Prewarm start");
         // _sceneInstance = await PrewarmGame2();
-        _sceneInstance = await _scene.PreLoadSceneAsync().Task;
+        _loadScene = _scene.PreLoadSceneAsync();
+        _sceneInstance = await _loadScene.Task;
         await Task.Delay(500);
         Debug.Log("Prewarm over");
+        SceneManager.SetActiveScene(_sceneInstance.Scene);
         _status = GameStatus.Idle;
     }
 
-    // public IEnumerator PrewarmGame()
-    // {
-    //     _loadScene = _scene.PreLoadSceneAsync();
-    //     while (! _loadScene.IsDone)
-    //     {
-    //         yield return null;
-    //     }
-    //
-    //     _sceneInstance = _loadScene.Result;
-    //      _status = GameStatus.Idle;
-    // }
+    public IEnumerator PrewarmGame()
+    {
+        _loadScene = _scene.PreLoadSceneAsync();
+        while (! _loadScene.IsDone)
+        {
+            yield return null;
+        }
+
+        _sceneInstance = _loadScene.Result;
+        SceneManager.SetActiveScene(_sceneInstance.Scene);
+        _status = GameStatus.Idle;
+    }
 
     public async Task<SceneInstance> PrewarmGame2()
     {
@@ -88,7 +91,7 @@ public abstract class MicroGameHandler : ScriptableObject
 
     public void InitGame(int difficultyLevel)
     {
-        _sceneInstance.Activate();
+        // _sceneInstance.Activate();
         SpecificInitGame(difficultyLevel);
         // var time = GetGameTimer(difficultyLevel);
 
@@ -103,6 +106,7 @@ public abstract class MicroGameHandler : ScriptableObject
     public IEnumerator TimerCountDown(float initialTime)
     {
         Timer = initialTime;
+        Debug.Log("Start timer of "+Timer);
         while (Timer > 0 && Status == GameStatus.Running)
         {
             yield return null;
@@ -111,6 +115,8 @@ public abstract class MicroGameHandler : ScriptableObject
 
         if (Timer <= 0)
         {
+
+            Debug.Log("Time out");
             //time out
             switch (_onTimerEnd)
             {
@@ -127,6 +133,11 @@ public abstract class MicroGameHandler : ScriptableObject
                     throw new ArgumentOutOfRangeException();
             }
         }
+        else
+        {
+
+            Debug.Log("Game failed externally out");
+        }
     }
 
     protected virtual bool CheckVictoryCondition()
@@ -140,9 +151,14 @@ public abstract class MicroGameHandler : ScriptableObject
 
     public void EndGame(bool gameWon)
     {
-        Addressables.UnloadSceneAsync(_sceneInstance).Completed+=OnSceneUnloaded;
-        SpecificEndGame(gameWon);
-        if (OnGameEnded != null) OnGameEnded(gameWon);
+        // _sceneInstance.Scene.
+        Addressables.UnloadSceneAsync(_loadScene).Completed+=o=>
+        {
+            OnSceneUnloaded(o);
+            SpecificEndGame(gameWon);
+            if (OnGameEnded != null)
+                OnGameEnded(gameWon);
+        };
     }
 
     private void OnSceneUnloaded(AsyncOperationHandle<SceneInstance> obj)

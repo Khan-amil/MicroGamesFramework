@@ -44,11 +44,11 @@ public class GameFramework : MonoBehaviour
         yield return null;
         yield return null;
         yield return null;
-        _currentGames[0].PrewarmGame();
-        while (_currentGames[0].Status== MicroGameHandler.GameStatus.Init)
-        {
-            yield return null;
-        }
+        // _currentGames[0].PrewarmGame();
+        // while (_currentGames[0].Status== MicroGameHandler.GameStatus.Init)
+        // {
+        //     yield return null;
+        // }
 
        // foreach (var game in _currentGames)
        // {
@@ -92,25 +92,36 @@ public class GameFramework : MonoBehaviour
         StartCoroutine(StartupGame());
     }
 
-    private void PrewarmNextGame()
+    private async void PrewarmNextGame()
     {
         if (_currentGameIndex < _currentGames.Count)
         {
-            _currentGames[_currentGameIndex+1].PrewarmGame();
+            _currentGames[_currentGameIndex+1].PrewarmGameAsync();
         }
     }
 
     IEnumerator StartupGame()
     {
-
-        yield return StartCoroutine(_currentGame.PreloadGame());
+        //
+        // yield return StartCoroutine(_currentGame.PrewarmGame());
+        // yield return StartCoroutine(_currentGame.PreloadGame());
         _intro.ApplyTitle(_currentGame);
         _director.time = 0;
         _director.Play();
+        yield return 0;
     }
 
     public void OnIntroFinished()
     {
+        StartCoroutine(DoStartGame());
+        // _currentGame.InitGame(0);
+        // StartCoroutine((_currentGame.TimerCountDown(_currentGame.GetGameTimer(0))));
+    }
+
+    IEnumerator DoStartGame()
+    {
+        yield return StartCoroutine(_currentGame.PrewarmGame());
+        yield return StartCoroutine(_currentGame.PreloadGame());
         _currentGame.InitGame(0);
         StartCoroutine((_currentGame.TimerCountDown(_currentGame.GetGameTimer(0))));
     }
@@ -133,7 +144,8 @@ public class GameFramework : MonoBehaviour
         if (_currentGameIndex < _currentGames.Count)
         {
             _currentGame = _currentGames[_currentGameIndex++];
-            _currentGame.PrewarmGame();
+            yield return StartCoroutine(_currentGame.PrewarmGame());
+            // _currentGame.PrewarmGameAsync();
             while (_currentGame.Status!=MicroGameHandler.GameStatus.Idle)
             {
                 yield return null;
@@ -141,4 +153,18 @@ public class GameFramework : MonoBehaviour
             StartGame();
         }
     }
+
+    public static void FailGame()
+    {
+        Debug.Log("Fail");
+        Instance._currentGame.EndGame(false);
+    }
+
+    public static void WinGame()
+    {
+        Debug.Log("Win");
+        Instance._currentGame.EndGame(true);
+    }
+
+
 }

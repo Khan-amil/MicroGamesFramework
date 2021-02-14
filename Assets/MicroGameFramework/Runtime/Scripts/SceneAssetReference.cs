@@ -26,7 +26,9 @@ namespace DefaultNamespace
         /// <returns>The operation handle for the scene load.</returns>
         public AsyncOperationHandle<SceneInstance> PreLoadSceneAsync()
         {
-            var result = Addressables.LoadSceneAsync(RuntimeKey,LoadSceneMode.Additive,activateOnLoad:false);
+
+            Resources.UnloadUnusedAssets();
+            var result = Addressables.LoadSceneAsync(RuntimeKey,LoadSceneMode.Additive,activateOnLoad:true);
             return result;
         }
     }
