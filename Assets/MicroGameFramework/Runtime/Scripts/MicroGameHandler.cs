@@ -17,13 +17,15 @@ public abstract class MicroGameHandler : ScriptableObject
         Init=0,
         Idle=1,
         Running=2,
-        Over=3
+        Finished=3,
+        Ending=4,
+        Over=5
     }
 
     public enum TimerRule
     {
-        AutoWin,
-        AutoFail,
+        Win,
+        Loose,
         CustomCheck
     }
 
@@ -37,14 +39,25 @@ public abstract class MicroGameHandler : ScriptableObject
     public event Action OnGameStarted;
     public event Action<bool> OnGameEnded;
 
-    public TimerRule _onTimerEnd;
+    protected TimerRule _onTimerEnd;
     protected bool _gameLostIfTimeOver;
     private float _timer;
+    private float _startTimer;
 
     public float Timer
     {
         get => _timer;
         private set => _timer = value;
+    }
+
+    public float TimerRatio
+    {
+        get
+        {
+            if (_startTimer == 0)
+                return 0;
+            return _timer / _startTimer;
+        }
     }
 
     public GameStatus Status
@@ -56,29 +69,19 @@ public abstract class MicroGameHandler : ScriptableObject
     private GameStatus _status = GameStatus.Init;
     private AsyncOperationHandle<SceneInstance> _loadScene;
 
-    public async void PrewarmGameAsync()
-    {
-        Debug.Log("Prewarm start");
-        // _sceneInstance = await PrewarmGame2();
-        _loadScene = _scene.PreLoadSceneAsync();
-        _sceneInstance = await _loadScene.Task;
-        await Task.Delay(500);
-        Debug.Log("Prewarm over");
-        SceneManager.SetActiveScene(_sceneInstance.Scene);
-        _status = GameStatus.Idle;
-    }
-
     public IEnumerator PrewarmGame()
     {
-        _loadScene = _scene.PreLoadSceneAsync();
-        while (! _loadScene.IsDone)
+        _status = GameStatus.Init;
+        SceneLoader.Instance.LoadScene(_scene,()=>
+        {
+            _status = GameStatus.Idle;
+            Debug.Log("Game loaded over, "+_status);
+        });
+        while ( _status != GameStatus.Idle)
         {
             yield return null;
         }
-
-        _sceneInstance = _loadScene.Result;
-        SceneManager.SetActiveScene(_sceneInstance.Scene);
-        _status = GameStatus.Idle;
+        Debug.Log("Prewarm over, "+_status);
     }
 
     public async Task<SceneInstance> PrewarmGame2()
@@ -106,38 +109,52 @@ public abstract class MicroGameHandler : ScriptableObject
     public IEnumerator TimerCountDown(float initialTime)
     {
         Timer = initialTime;
-        Debug.Log("Start timer of "+Timer);
-        while (Timer > 0 && Status == GameStatus.Running)
+        _startTimer = initialTime;
+        Debug.Log("Start timer of "+Timer + " ; "+ Time.time);
+        while (Timer > 0)
         {
             yield return null;
             Timer -= Time.deltaTime;
         }
 
-        if (Timer <= 0)
-        {
 
-            Debug.Log("Time out");
-            //time out
-            switch (_onTimerEnd)
-            {
-                case TimerRule.AutoWin:
-                    EndGame(true);
-                    break;
-                case TimerRule.AutoFail:
-                    EndGame(false);
-                    break;
-                case TimerRule.CustomCheck:
-                    EndGame(CheckVictoryCondition());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-        else
-        {
+        Debug.Log("Time out");
 
-            Debug.Log("Game failed externally out");
+        bool victory;
+        //time out
+        switch (_onTimerEnd)
+        {
+            case TimerRule.Win:
+                victory = true;
+                break;
+            case TimerRule.Loose:
+                victory = false;
+                break;
+            case TimerRule.CustomCheck:
+                victory = CheckVictoryCondition();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+
+
+        // Send endgame event
+        GameFramework.Feedback(victory);
+
+        EndGame(victory);
+
+    }
+
+    public void WinGame()
+    {
+        _onTimerEnd = TimerRule.Win;
+        Status = GameStatus.Finished;
+    }
+
+    public void FailGame()
+    {
+        _onTimerEnd = TimerRule.Loose;
+        Status = GameStatus.Finished;
     }
 
     protected virtual bool CheckVictoryCondition()
@@ -151,22 +168,36 @@ public abstract class MicroGameHandler : ScriptableObject
 
     public void EndGame(bool gameWon)
     {
-        // _sceneInstance.Scene.
-        Addressables.UnloadSceneAsync(_loadScene).Completed+=o=>
+        if (Status == GameStatus.Running || Status== GameStatus.Finished)
         {
-            OnSceneUnloaded(o);
-            SpecificEndGame(gameWon);
-            if (OnGameEnded != null)
-                OnGameEnded(gameWon);
-        };
+            Status = GameStatus.Ending;
+            SceneLoader.Instance.UnloadScene(()=>OnSceneUnloaded(gameWon));
+        }
+        else
+        {
+            Debug.LogError("Can't fail current game, current status mismatch : "+Status);
+        }
     }
 
-    private void OnSceneUnloaded(AsyncOperationHandle<SceneInstance> obj)
+    private void OnSceneUnloaded(bool gameWon)
     {
-
+        Debug.Log("Scene successfully unloaded");
+        SpecificEndGame(gameWon);
+        if (OnGameEnded != null)
+            OnGameEnded(gameWon);
         Resources.UnloadUnusedAssets();
         Status = GameStatus.Over;
     }
 
     protected abstract void SpecificEndGame(bool gameWon);
+
+    public void ForceEndGame()
+    {
+        SceneLoader.Instance.UnloadScene(() =>
+        {
+            SpecificEndGame(false);
+            Resources.UnloadUnusedAssets();
+            Status = GameStatus.Over;
+        });
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ namespace DefaultNamespace
         public float _duration;
 
         public GameObject _titleCard;
-        public Text _text;
+        public TMP_Text _text;
 
         public void ApplyTitle(MicroGameHandler game)
         {
